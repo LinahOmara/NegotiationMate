@@ -33,17 +33,17 @@ export function Header({ onSave, onImport }: { onSave: () => void; onImport: () 
           </div>
         </div>
 
-        <div className="order-3 flex w-full min-w-0 flex-wrap items-center gap-2 md:order-2 md:w-auto">
+        <div className="order-3 flex w-full min-w-0 flex-wrap items-center gap-2 lg:order-2 lg:w-auto">
           <CurrencySwitcher />
           <RateControl />
         </div>
 
-        <div className="order-2 flex items-center gap-1.5 md:order-3">
+        <div className="order-2 flex items-center gap-1.5 lg:order-3">
           <Button variant="accent" onClick={() => setFocusMode(true)} data-testid="focus-enter" aria-keyshortcuts="F">
             <ScanEye />
             <span className="hidden xs:inline">Focus Mode</span>
           </Button>
-          <Button variant="outline" onClick={onSave} className="hidden lg:inline-flex" data-testid="save-offer" aria-keyshortcuts="S">
+          <Button variant="outline" onClick={onSave} className="hidden xl:inline-flex" data-testid="save-offer" aria-keyshortcuts="S">
             <Save />
             Save offer
           </Button>
@@ -54,7 +54,7 @@ export function Header({ onSave, onImport }: { onSave: () => void; onImport: () 
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onSelect={onSave} className="lg:hidden">
+              <DropdownMenuItem onSelect={onSave} className="xl:hidden">
                 <Save /> Save offer to history
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => window.print()} data-testid="export-summary">

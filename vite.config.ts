@@ -14,7 +14,19 @@ export default defineConfig({
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
   build: {
-    chunkSizeWarningLimit: 900,
+    rolldownOptions: {
+      output: {
+        // Long-lived vendor chunks so app updates do not invalidate them.
+        codeSplitting: {
+          groups: [
+            { name: 'charts', test: /node_modules[\\/](recharts|d3-|victory-vendor|es-toolkit|@reduxjs|redux|immer|reselect)/ },
+            { name: 'react', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/ },
+            { name: 'ui', test: /node_modules[\\/](radix-ui|@radix-ui|motion|framer-motion|motion-dom|motion-utils|lucide-react)/ },
+            { name: 'vendor', test: /node_modules/ },
+          ],
+        },
+      },
+    },
   },
   test: {
     environment: 'jsdom',

@@ -162,12 +162,24 @@ export function createAppStore(storage = safeLocalStorage()) {
   })
 
   let timer: ReturnType<typeof setTimeout> | undefined
+  const flush = () => {
+    if (timer === undefined) return
+    clearTimeout(timer)
+    timer = undefined
+    saveToStorage(storage, pickData(store.getState()))
+  }
   store.subscribe((s, prev) => {
     if (pickDataChanged(s, prev)) {
       clearTimeout(timer)
-      timer = setTimeout(() => saveToStorage(storage, pickData(store.getState())), 250)
+      timer = setTimeout(flush, 250)
     }
   })
+  // Never lose the last edit to a reload or tab close inside the debounce window.
+  if (typeof window !== 'undefined') {
+    window.addEventListener('pagehide', flush)
+    window.addEventListener('beforeunload', flush)
+    document.addEventListener('visibilitychange', () => document.visibilityState === 'hidden' && flush())
+  }
   return store
 }
 

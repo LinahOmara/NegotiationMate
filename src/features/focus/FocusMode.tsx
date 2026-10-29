@@ -359,11 +359,11 @@ export function FocusMode({ onSave }: { onSave: () => void }) {
               <span className="size-1.5 animate-pulse rounded-full bg-accent" aria-hidden /> Live call
             </span>
           </div>
-          <div className="order-3 flex w-full flex-wrap items-center gap-2 md:order-2 md:w-auto">
+          <div className="order-3 flex w-full flex-wrap items-center gap-2 lg:order-2 lg:w-auto">
             <CurrencySwitcher layoutId="focus-display-currency" />
             <RateControl />
           </div>
-          <div className="order-2 flex items-center gap-1.5 md:order-3">
+          <div className="order-2 flex items-center gap-1.5 lg:order-3">
             <Button variant="ghost" size="icon" onClick={() => setHelp(true)} aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">
               <Keyboard />
             </Button>

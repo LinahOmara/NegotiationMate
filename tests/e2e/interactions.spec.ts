@@ -200,9 +200,7 @@ test('11. offer history persists across reload and compares', async ({ page }) =
   await expect(cmp.getByRole('row', { name: /Total recurring/ })).toContainText('Improved')
 })
 
-// APP BUG: src/state/store.ts persists with a 250ms debounce and never flushes on
-// pagehide/beforeunload, so a reload (or tab close) within 250ms of an edit loses it.
-test.fixme('11b. history survives an immediate reload (no debounce data loss)', async ({ page }) => {
+test('11b. history survives an immediate reload (no debounce data loss)', async ({ page }) => {
   await page.getByTestId('save-offer').click()
   await page.getByTestId('save-confirm').click()
   await expect(page.getByTestId('history-entry')).toHaveCount(1)

@@ -6,11 +6,11 @@ Compensation Cockpit is a real-time, browser-only workspace for candidates negot
 
 ## Screenshots
 
-![Desktop dashboard at 1440px](docs/screenshots/desktop-1440.png)
+![Desktop dashboard at 1440px](docs/screenshots/dashboard-1440.png)
 
 ![Focus Mode at 1440px](docs/screenshots/focus-1440.png)
 
-![Mobile layout at 375px](docs/screenshots/mobile-375.png)
+![Mobile layout at 375px](docs/screenshots/dashboard-375.png)
 
 ## Features
 
@@ -44,6 +44,21 @@ Compensation Cockpit is a real-time, browser-only workspace for candidates negot
 - Save offers to a history, with timeline and comparison of any two.
 - JSON import and export, with schema validation. Malformed or newer-version files are rejected with a message rather than applied.
 - Printable one-page summary.
+
+## Focus Mode
+
+Press **F** (or the Focus Mode button) during a recruiter call. The screen reduces to the recruiter's offer inputs (enlarged), your target, the live gap and how much of the target the offer reaches, guaranteed versus variable pay, the FX conversion, the top two negotiation questions with copy buttons, and the current counteroffer. Advanced equity modelling is hidden. At 1440×900 everything fits without scrolling.
+
+| Key | Action |
+| --- | --- |
+| `F` / `Esc` | Enter / leave Focus Mode |
+| `U` · `E` · `B` | Display USD · EGP · Both |
+| `X` | Swap the emphasized currency |
+| `1` · `2` · `3` | Select a scenario |
+| `S` | Save the offer to history |
+| `?` | Show shortcuts |
+
+Shortcuts are ignored while typing in a field.
 
 ## Quick start
 
@@ -82,14 +97,16 @@ Serve `dist/` over HTTP. Opening `dist/index.html` directly from the file system
 
 **Unit tests (Vitest).** Unit tests live beside their sources as `src/**/*.test.ts` and cover calculations (`src/calc/`), guidance (`src/guidance/`), persistence (`src/state/persistence.test.ts`) and the store (`src/state/store.test.ts`). Run them with `npm test`.
 
-**End-to-end, responsive and visual tests (Playwright).** These live in `tests/e2e`. Run `npm run build` first, because Playwright serves the built app with `vite preview`. Playwright browsers must be installed once, unless they are already present on the machine:
+**End-to-end, responsive and visual tests (Playwright).** These live in `tests/e2e`. Playwright's `webServer` builds the app and serves `dist/` with `vite preview`, so tests always run against the production build. Install the browser once, unless it is already present:
 
 ```bash
 npx playwright install chromium
-npm run build
-npm run test:e2e
-npm run test:visual
+npm run test:e2e        # all projects: interactions + visual
+npm run test:visual     # responsive/visual only
 ```
+
+- `interactions.spec.ts` covers editing target and offer, percentage and amount modes, USD/EGP/Both display, FX changes (including fixed-EGP offers), Focus Mode, scenarios and quick actions, offer history persistence and comparison, JSON import/export, reset and start fresh, copy-to-clipboard, and NaN/Infinity guards.
+- `visual.spec.ts` renders the dashboard and Focus Mode at 320, 375, 430, 768, 1024, 1440 and 1920 px. It fails on horizontal page overflow, offscreen elements, clipped amounts or tap targets under 24 px, compares against committed screenshot baselines, and writes reference images to `docs/screenshots/`. Refresh baselines after intentional UI changes with `npx playwright test --update-snapshots`.
 
 ## Architecture
 
@@ -156,7 +173,7 @@ BASE_PATH=/repo/ npm run build
 
 **Cloudflare Pages.** Use the same settings: root directory `compensation-cockpit`, build command `npm run build`, output directory `dist`.
 
-The app works offline once loaded. Fonts (Fraunces and Manrope) are self-hosted through `@fontsource`, and the app makes no runtime network requests.
+The app works offline once loaded. Fonts (Fraunces and Manrope) are self-hosted through `@fontsource`, the app makes no runtime network requests, and a small service worker (`public/sw.js`, production builds only) caches the app shell so it reopens without a connection.
 
 ## Privacy
 

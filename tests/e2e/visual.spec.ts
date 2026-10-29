@@ -40,6 +40,11 @@ async function layoutProblems(page: Page) {
     // Interactive targets large enough (24px minimum per WCAG 2.2 AA).
     for (const el of document.querySelectorAll<HTMLElement>('main button, main input, header button, [role=slider]')) {
       const r = el.getBoundingClientRect()
+      // Slider thumbs are drawn at 20px but carry a 40px hit area via ::before.
+      if (el.getAttribute('role') === 'slider') {
+        const before = getComputedStyle(el, '::before')
+        if (before.content !== 'none' && parseFloat(before.left) <= -8) continue
+      }
       if (r.width === 0 || el.closest('.sr-only')) continue
       if (r.height < 24 || r.width < 24) problems.push(`small target ${el.tagName} ${el.getAttribute('aria-label') ?? el.textContent?.slice(0, 20)} ${Math.round(r.width)}x${Math.round(r.height)}`)
     }

@@ -192,7 +192,7 @@ export function ScenarioExplorer() {
                 aria-label="Scenario name"
                 value={active.scenario.name}
                 onChange={(e) => updateScenario(active.scenario.id, { name: e.target.value.slice(0, 60) || active.scenario.name })}
-                className="min-w-0 flex-1 rounded-md bg-transparent text-sm font-semibold text-white/90 outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                className="-mx-2 h-9 min-w-0 flex-1 rounded-md bg-transparent px-2 text-sm font-semibold text-white/90 outline-none hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-white/40"
               />
             </div>
             <div className="mt-2 font-display-tight text-[clamp(2rem,5vw,2.75rem)] font-semibold leading-none tnum">

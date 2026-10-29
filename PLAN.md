@@ -25,10 +25,10 @@ Branch: `claude/compensation-negotiation-cockpit-5tlo32`.
 - [x] 11. UI: guidance cards with copy, FX sensitivity section
 - [x] 12. UI: offer history (save, compare two, timeline), print summary
 - [x] 13. Focus Mode (signature feature) + keyboard shortcuts
-- [ ] 14. Playwright e2e interaction tests
-- [ ] 15. Visual tests at 320/375/430/768/1024/1440/1920 (dashboard + Focus); inspect screenshots, fix, re-run
-- [ ] 16. README, deployment docs (subdir base), screenshots in docs/
-- [ ] 17. Final gate: typecheck, lint, unit, e2e, build; commit + push
+- [x] 14. Playwright e2e interaction tests
+- [x] 15. Visual tests at 320/375/430/768/1024/1440/1920 (dashboard + Focus); inspect screenshots, fix, re-run
+- [x] 16. README, deployment docs (subdir base), screenshots in docs/
+- [x] 17. Final gate: typecheck, lint, unit, e2e, build; commit + push
 
 ## Log
 - 22:50 Scaffold + domain schema (zod) + calc engine (money, bonus, equity, package, distribution, fx, scenarios) — 84 unit tests green, spec cases 1–6 covered.
@@ -37,3 +37,6 @@ Branch: `claude/compensation-negotiation-cockpit-5tlo32`.
 - 23:25 Delegated: Sonnet → offer history/compare, save dialog, JSON import dialog, print summary (reviewed: renders well; print = 1 A4 page). Haiku → README draft. Sonnet → Playwright interaction specs (in progress).
 - 23:35 Screenshot review at 320/375/1366/1440: fixed title truncation, table clipping on narrow phones (compact amounts), copy-button wrapping, Focus Mode fits 1440×900 without scrolling.
 - Push to GitHub blocked (403: Claude GitHub App lacks access to LinahOmara/BakerMate) — commits are local until access is fixed.
+- 23:50 Sonnet e2e suite (17 tests) green; it found a real bug (debounced save lost on immediate reload) → fixed with pagehide/beforeunload/visibilitychange flush, test re-enabled.
+- 23:55 Visual suite at 7 widths × (dashboard, Focus) green; fixed 768px header overlap, small scenario-name target. Screenshots in docs/screenshots.
+- 00:00 Service worker for offline reopen (verified offline reload); vendor code splitting; subdirectory hosting verified. Final gate: typecheck ✓ lint ✓ 143 unit ✓ 32 Playwright ✓ build ✓.
