@@ -1,0 +1,137 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens. Semantic names only — components never use raw hex values.
+ * Palette: warm ivory canvas, charcoal ink, teal accent; one fixed hue per
+ * compensation component (base / bonus / equity) used everywhere.
+ */
+:root {
+  --canvas: #f7f6f2;
+  --surface: #ffffff;
+  --surface-2: #f0f2ee;
+  --surface-3: #e7ebe5;
+  --ink: #172723;
+  --ink-soft: #2e3f3a;
+  --muted: #5f6c65; /* #68756E darkened slightly to keep 4.5:1 on surface-2 */
+  --line: #e2e5df;
+  --line-strong: #cfd5cd;
+  --accent: #0c8f83;
+  --accent-ink: #0a6f66;
+  --accent-soft: #e3f2ef;
+  --comp-base: #0e5f58;
+  --comp-bonus: #d49a44;
+  --comp-equity: #8576bd;
+  --negative: #b0563f;
+  --negative-soft: #f7e8e3;
+  --positive: #2f7a50;
+  --positive-soft: #e5f1e8;
+  --focus: #0c8f83;
+  --radius-card: 20px;
+  --shadow-card: 0 1px 2px rgb(23 39 35 / 0.04), 0 8px 24px -12px rgb(23 39 35 / 0.08);
+}
+
+@theme inline {
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-base: var(--comp-base);
+  --color-bonus: var(--comp-bonus);
+  --color-equity: var(--comp-equity);
+  --color-negative: var(--negative);
+  --color-negative-soft: var(--negative-soft);
+  --color-positive: var(--positive);
+  --color-positive-soft: var(--positive-soft);
+
+  --radius-card: var(--radius-card);
+  --shadow-card: var(--shadow-card);
+
+  --breakpoint-xs: 26rem;
+  --breakpoint-3xl: 112rem;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    color-scheme: light;
+  }
+  body {
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  ::selection {
+    background: var(--accent-soft);
+  }
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+@utility tnum {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+@utility font-display-tight {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  letter-spacing: -0.02em;
+}
+
+@utility card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print: only the one-page negotiation summary is printed. */
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+  body {
+    background: #fff;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}
+.print-only {
+  display: none;
+}
