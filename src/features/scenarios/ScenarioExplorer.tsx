@@ -13,6 +13,7 @@ import type { Adjustments } from '@/domain/schema'
 import { formatPct } from '@/lib/format'
 import { toast } from '@/components/toast'
 import { cn } from '@/lib/cn'
+import { ResponsiveAmount } from '@/components/Amount'
 
 const QUICK: { kind: SolverKind; icon: typeof Target }[] = [
   { kind: 'closeGap', icon: Target },
@@ -37,7 +38,7 @@ export function ScenarioExplorer() {
   const { scenarioResults, active, target, offer } = useDerived()
   const notes = useApp((s) => s.ui.solverNotes)
   const { setActiveScenario, setScenarioAdjustment, applySolver, resetScenario, saveToHistory, updateScenario } = useApp.getState()
-  const { fmt, primary } = useMoney()
+  const { fmt, primary, compact } = useMoney()
   const signed = useCallback((v: number) => fmt(v, primary, { signed: true }), [fmt, primary])
   const plain = useCallback((v: number) => fmt(v), [fmt])
 
@@ -91,7 +92,11 @@ export function ScenarioExplorer() {
                 <AnimatedNumber value={result.recurring} format={plain} />
               </div>
               <div className={cn('mt-1 text-xs font-semibold tnum', result.remainingGap < -0.5 ? 'text-negative' : 'text-positive')}>
-                {result.remainingGap < -0.5 ? `${fmt(-result.remainingGap)} below target` : Math.abs(result.remainingGap) <= 0.5 ? 'Reaches target' : `${fmt(result.remainingGap)} above target`}
+                {result.remainingGap < -0.5
+                  ? `${fmt(-result.remainingGap)} below target`
+                  : Math.abs(result.remainingGap) <= 0.5
+                    ? 'Reaches target'
+                    : `${fmt(result.remainingGap)} above target`}
               </div>
             </button>
           )
@@ -198,7 +203,8 @@ export function ScenarioExplorer() {
               <div>
                 <dt className="text-white/60">Remaining gap</dt>
                 <dd className="font-semibold tnum" data-testid="scenario-remaining-gap">
-                  {signed(active.result.remainingGap)} <span className="font-normal text-white/60">({formatPct(active.result.remainingGapPct, { signed: true })})</span>
+                  {signed(active.result.remainingGap)}{' '}
+                  <span className="font-normal text-white/60">({formatPct(active.result.remainingGapPct, { signed: true })})</span>
                 </dd>
               </div>
               <div>
@@ -207,7 +213,9 @@ export function ScenarioExplorer() {
               </div>
               <div>
                 <dt className="text-white/60">First year</dt>
-                <dd className="font-semibold tnum" data-testid="scenario-first-year">{fmt(active.result.firstYear)}</dd>
+                <dd className="font-semibold tnum" data-testid="scenario-first-year">
+                  {fmt(active.result.firstYear)}
+                </dd>
               </div>
               <div>
                 <dt className="text-white/60">Ongoing (yr 2+)</dt>
@@ -228,7 +236,13 @@ export function ScenarioExplorer() {
                 <BookmarkPlus /> Save to history
               </Button>
               {!isCurrent && (
-                <Button size="sm" variant="ghost" className="text-white/80 hover:bg-white/10 hover:text-white" onClick={() => resetScenario(active.scenario.id)} data-testid="scenario-reset">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="text-white/80 hover:bg-white/10 hover:text-white"
+                  onClick={() => resetScenario(active.scenario.id)}
+                  data-testid="scenario-reset"
+                >
                   <RotateCcw /> Reset
                 </Button>
               )}
@@ -236,25 +250,43 @@ export function ScenarioExplorer() {
           </div>
 
           <div className="overflow-x-auto rounded-2xl border border-line">
-            <table className="w-full text-[0.8125rem] tnum" data-testid="scenario-compare">
+            <table className="w-full text-[0.6875rem] tnum xs:text-xs sm:text-[0.8125rem]" data-testid="scenario-compare">
               <caption className="sr-only">Before and after comparison of scenarios</caption>
               <thead className="bg-surface-2 text-xs text-muted">
                 <tr>
-                  <th scope="col" className="px-3 py-2 text-left font-semibold">Scenario</th>
-                  <th scope="col" className="px-3 py-2 text-right font-semibold">Base</th>
-                  <th scope="col" className="px-3 py-2 text-right font-semibold">Year 1</th>
-                  <th scope="col" className="hidden px-3 py-2 text-right font-semibold sm:table-cell">Ongoing</th>
-                  <th scope="col" className="px-3 py-2 text-right font-semibold">Gap</th>
+                  <th scope="col" className="px-1.5 py-2 xs:px-2 sm:px-3 text-left font-semibold">
+                    Scenario
+                  </th>
+                  <th scope="col" className="px-1.5 py-2 xs:px-2 sm:px-3 text-right font-semibold">
+                    Base
+                  </th>
+                  <th scope="col" className="px-1.5 py-2 xs:px-2 sm:px-3 text-right font-semibold">
+                    Year 1
+                  </th>
+                  <th scope="col" className="hidden px-1.5 py-2 xs:px-2 sm:px-3 text-right font-semibold sm:table-cell">
+                    Ongoing
+                  </th>
+                  <th scope="col" className="px-1.5 py-2 xs:px-2 sm:px-3 text-right font-semibold">
+                    Gap
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {scenarioResults.map(({ scenario, result }) => (
                   <tr key={scenario.id} className={cn('border-t border-line', scenario.id === active.scenario.id && 'bg-accent-soft/40')}>
-                    <th scope="row" className="max-w-[7rem] truncate px-3 sm:max-w-[9rem] py-2 text-left font-semibold">{scenario.name}</th>
-                    <td className="px-3 py-2 text-right">{fmt(result.base)}</td>
-                    <td className="px-3 py-2 text-right">{fmt(result.firstYear)}</td>
-                    <td className="hidden px-3 py-2 text-right sm:table-cell">{fmt(result.ongoing)}</td>
-                    <td className={cn('px-3 py-2 text-right font-semibold', result.remainingGap < -0.5 ? 'text-negative' : 'text-positive')}>{signed(result.remainingGap)}</td>
+                    <th scope="row" className="max-w-[5rem] truncate xs:max-w-[7rem] px-3 sm:max-w-[9rem] py-2 text-left font-semibold">
+                      {scenario.name}
+                    </th>
+                    <td className="px-1.5 py-2 xs:px-2 sm:px-3 text-right">
+                      <ResponsiveAmount full={fmt(result.base)} compact={compact(result.base)} />
+                    </td>
+                    <td className="px-1.5 py-2 xs:px-2 sm:px-3 text-right">
+                      <ResponsiveAmount full={fmt(result.firstYear)} compact={compact(result.firstYear)} />
+                    </td>
+                    <td className="hidden px-1.5 py-2 xs:px-2 sm:px-3 text-right sm:table-cell">{fmt(result.ongoing)}</td>
+                    <td className={cn('px-1.5 py-2 xs:px-2 sm:px-3 text-right font-semibold', result.remainingGap < -0.5 ? 'text-negative' : 'text-positive')}>
+                      <ResponsiveAmount full={signed(result.remainingGap)} compact={compact(result.remainingGap, primary, { signed: true })} />
+                    </td>
                   </tr>
                 ))}
               </tbody>

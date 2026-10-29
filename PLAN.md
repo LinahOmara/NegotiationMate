@@ -13,18 +13,18 @@ Branch: `claude/compensation-negotiation-cockpit-5tlo32`.
 
 ## Tasks
 - [x] 1. Scaffold: Vite + React + TS, Tailwind v4, radix-ui, motion, recharts, zustand, zod, decimal.js, lucide; ESLint; Vitest; Playwright
-- [ ] 2. Design tokens (CSS variables, light theme palette, Fraunces/Manrope self-hosted fonts)
+- [x] 2. Design tokens (CSS variables, light theme palette, Fraunces/Manrope self-hosted fonts)
 - [x] 3. Domain models (Money with explicit currency + FX arrangement, components, zod schemas)
 - [x] 4. Calculation engine (TDD) — conversion, normalization, totals, gaps, variable %, bonus payout, equity vesting, first-year vs recurring, FX sensitivity, counteroffers; spec cases 1–6
-- [ ] 5. Guidance engine (TDD) — deterministic rules, prioritized insights
+- [x] 5. Guidance engine (TDD) — deterministic rules, prioritized insights
 - [x] 6. Scenario solver (TDD) — quick actions (close gap, base-first, equity-only, sign-on, match target with mix)
-- [ ] 7. Store + persistence (zustand, versioned schema, migration, malformed state, JSON import/export)
-- [ ] 8. UI: header, target panel (percent/amount modes, linked sliders), offer panel (bonus & equity simple/advanced, sign-on)
-- [ ] 9. UI: hero comparison, breakdown chart + table, gap insights
-- [ ] 10. UI: Explore Your Next Move (scenarios, sliders, quick actions, compare)
-- [ ] 11. UI: guidance cards with copy, FX sensitivity section
-- [ ] 12. UI: offer history (save, compare two, timeline), print summary
-- [ ] 13. Focus Mode (signature feature) + keyboard shortcuts
+- [x] 7. Store + persistence (zustand, versioned schema, migration, malformed state, JSON import/export)
+- [x] 8. UI: header, target panel (percent/amount modes, linked sliders), offer panel (bonus & equity simple/advanced, sign-on)
+- [x] 9. UI: hero comparison, breakdown chart + table, gap insights
+- [x] 10. UI: Explore Your Next Move (scenarios, sliders, quick actions, compare)
+- [x] 11. UI: guidance cards with copy, FX sensitivity section
+- [x] 12. UI: offer history (save, compare two, timeline), print summary
+- [x] 13. Focus Mode (signature feature) + keyboard shortcuts
 - [ ] 14. Playwright e2e interaction tests
 - [ ] 15. Visual tests at 320/375/430/768/1024/1440/1920 (dashboard + Focus); inspect screenshots, fix, re-run
 - [ ] 16. README, deployment docs (subdir base), screenshots in docs/
@@ -32,3 +32,8 @@ Branch: `claude/compensation-negotiation-cockpit-5tlo32`.
 
 ## Log
 - 22:50 Scaffold + domain schema (zod) + calc engine (money, bonus, equity, package, distribution, fx, scenarios) — 84 unit tests green, spec cases 1–6 covered.
+- 23:05 Guidance engine + gap analysis + persistence (versioned, migrations) + zustand store — TDD, 133 tests.
+- 23:20 Full UI built: header, hero, target/offer panels, breakdown chart + table, gap analysis, guidance cards w/ copy, scenario explorer w/ solvers, FX sensitivity, Focus Mode + shortcuts, mobile sticky gap bar.
+- 23:25 Delegated: Sonnet → offer history/compare, save dialog, JSON import dialog, print summary (reviewed: renders well; print = 1 A4 page). Haiku → README draft. Sonnet → Playwright interaction specs (in progress).
+- 23:35 Screenshot review at 320/375/1366/1440: fixed title truncation, table clipping on narrow phones (compact amounts), copy-button wrapping, Focus Mode fits 1440×900 without scrolling.
+- Push to GitHub blocked (403: Claude GitHub App lacks access to LinahOmara/BakerMate) — commits are local until access is fixed.

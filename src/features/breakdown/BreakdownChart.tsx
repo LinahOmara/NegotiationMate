@@ -11,6 +11,7 @@ import { COMPONENT_META } from '@/lib/componentMeta'
 import { COMPONENTS, type ComponentKey } from '@/domain/schema'
 import { formatPct } from '@/lib/format'
 import { cn } from '@/lib/cn'
+import { ResponsiveAmount } from '@/components/Amount'
 
 type Row = { name: string } & Record<ComponentKey, number> & { totalUsd: number; raw: Record<ComponentKey, number> }
 
@@ -126,14 +127,22 @@ function BreakdownChartInner() {
       </ChartContainer>
 
       <div className="mt-4 overflow-x-auto rounded-xl border border-line">
-        <table className="w-full min-w-[20rem] text-[0.8125rem] tnum" data-testid="breakdown-table">
+        <table className="w-full text-[0.6875rem] tnum xs:text-xs sm:text-[0.8125rem]" data-testid="breakdown-table">
           <caption className="sr-only">Component values and gaps, annual</caption>
           <thead className="bg-surface-2 text-xs text-muted">
             <tr>
-              <th scope="col" className="px-3 py-2 text-left font-semibold">Component</th>
-              <th scope="col" className="px-3 py-2 text-right font-semibold">Target</th>
-              <th scope="col" className="px-3 py-2 text-right font-semibold">Offer</th>
-              <th scope="col" className="px-3 py-2 text-right font-semibold">Gap</th>
+              <th scope="col" className="px-1.5 py-2 xs:px-2 sm:px-3 text-left font-semibold">
+                Component
+              </th>
+              <th scope="col" className="px-1.5 py-2 xs:px-2 sm:px-3 text-right font-semibold">
+                Target
+              </th>
+              <th scope="col" className="px-1.5 py-2 xs:px-2 sm:px-3 text-right font-semibold">
+                Offer
+              </th>
+              <th scope="col" className="px-1.5 py-2 xs:px-2 sm:px-3 text-right font-semibold">
+                Gap
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -141,26 +150,52 @@ function BreakdownChartInner() {
               const g = comparison.componentGaps[k]
               return (
                 <tr key={k} className="border-t border-line">
-                  <th scope="row" className="px-3 py-2 text-left font-semibold">
-                    <span className="flex items-center gap-2">
+                  <th scope="row" className="px-1.5 py-2 xs:px-2 sm:px-3 text-left font-semibold">
+                    <span className="flex items-center gap-1.5 xs:gap-2">
                       <span className={cn('size-2 rounded-full', COMPONENT_META[k].swatch)} aria-hidden />
                       {COMPONENT_META[k].short}
                     </span>
                   </th>
-                  <td className="px-3 py-2 text-right">{mode === 'percent' ? formatPct(target.mixPct[k], { decimals: 0 }) : fmt(target.components[k])}</td>
-                  <td className="px-3 py-2 text-right">{mode === 'percent' ? formatPct(offer.mixPct[k], { decimals: 0 }) : fmt(offer.components[k])}</td>
-                  <td className={cn('px-3 py-2 text-right font-semibold', g < -0.5 ? 'text-negative' : g > 0.5 ? 'text-positive' : 'text-muted')}>
-                    {fmt(g, primary, { signed: true })}
+                  <td className="px-1.5 py-2 xs:px-2 sm:px-3 text-right">
+                    {mode === 'percent' ? (
+                      formatPct(target.mixPct[k], { decimals: 0 })
+                    ) : (
+                      <ResponsiveAmount full={fmt(target.components[k])} compact={compact(target.components[k])} />
+                    )}
+                  </td>
+                  <td className="px-1.5 py-2 xs:px-2 sm:px-3 text-right">
+                    {mode === 'percent' ? (
+                      formatPct(offer.mixPct[k], { decimals: 0 })
+                    ) : (
+                      <ResponsiveAmount full={fmt(offer.components[k])} compact={compact(offer.components[k])} />
+                    )}
+                  </td>
+                  <td className={cn('px-1.5 py-2 xs:px-2 sm:px-3 text-right font-semibold', g < -0.5 ? 'text-negative' : g > 0.5 ? 'text-positive' : 'text-muted')}>
+                    <ResponsiveAmount full={fmt(g, primary, { signed: true })} compact={compact(g, primary, { signed: true })} />
                   </td>
                 </tr>
               )
             })}
             <tr className="border-t border-line-strong bg-surface-2/50 font-semibold">
-              <th scope="row" className="px-3 py-2 text-left">Total</th>
-              <td className="px-3 py-2 text-right">{fmt(target.recurring)}</td>
-              <td className="px-3 py-2 text-right">{fmt(offer.recurring)}</td>
-              <td className={cn('px-3 py-2 text-right', comparison.totalGap < -0.5 ? 'text-negative' : comparison.totalGap > 0.5 ? 'text-positive' : 'text-muted')}>
-                {fmt(comparison.totalGap, primary, { signed: true })}
+              <th scope="row" className="px-1.5 py-2 xs:px-2 sm:px-3 text-left">
+                Total
+              </th>
+              <td className="px-1.5 py-2 xs:px-2 sm:px-3 text-right">
+                <ResponsiveAmount full={fmt(target.recurring)} compact={compact(target.recurring)} />
+              </td>
+              <td className="px-1.5 py-2 xs:px-2 sm:px-3 text-right">
+                <ResponsiveAmount full={fmt(offer.recurring)} compact={compact(offer.recurring)} />
+              </td>
+              <td
+                className={cn(
+                  'px-1.5 py-2 xs:px-2 sm:px-3 text-right',
+                  comparison.totalGap < -0.5 ? 'text-negative' : comparison.totalGap > 0.5 ? 'text-positive' : 'text-muted',
+                )}
+              >
+                <ResponsiveAmount
+                  full={fmt(comparison.totalGap, primary, { signed: true })}
+                  compact={compact(comparison.totalGap, primary, { signed: true })}
+                />
               </td>
             </tr>
           </tbody>

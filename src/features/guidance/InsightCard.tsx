@@ -23,11 +23,11 @@ function CopyButton({ text, label, size = 'md' }: { text: string; label: string;
       data-testid="copy-question"
       className={cn(
         'inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg font-semibold text-accent-ink transition-colors hover:bg-accent-soft',
-        size === 'lg' ? 'h-11 px-3 text-sm' : 'h-9 px-2.5 text-xs',
+        size === 'lg' ? 'h-11 px-3 text-sm' : 'h-9 min-w-9 px-2 text-xs sm:px-2.5',
       )}
     >
       {done ? <Check className="size-4" /> : <Copy className="size-4" />}
-      {done ? 'Copied' : 'Copy'}
+      <span className={size === 'lg' ? undefined : 'hidden sm:inline'}>{done ? 'Copied' : 'Copy'}</span>
     </button>
   )
 }
