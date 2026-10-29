@@ -12,12 +12,12 @@ Branch: `claude/compensation-negotiation-cockpit-5tlo32`.
   `npx motion-ai` cannot reach its hosted MCP/skill endpoints; Motion is used directly from `motion/react`.
 
 ## Tasks
-- [ ] 1. Scaffold: Vite + React + TS, Tailwind v4, radix-ui, motion, recharts, zustand, zod, decimal.js, lucide; ESLint; Vitest; Playwright
+- [x] 1. Scaffold: Vite + React + TS, Tailwind v4, radix-ui, motion, recharts, zustand, zod, decimal.js, lucide; ESLint; Vitest; Playwright
 - [ ] 2. Design tokens (CSS variables, light theme palette, Fraunces/Manrope self-hosted fonts)
-- [ ] 3. Domain models (Money with explicit currency + FX arrangement, components, zod schemas)
-- [ ] 4. Calculation engine (TDD) — conversion, normalization, totals, gaps, variable %, bonus payout, equity vesting, first-year vs recurring, FX sensitivity, counteroffers; spec cases 1–6
+- [x] 3. Domain models (Money with explicit currency + FX arrangement, components, zod schemas)
+- [x] 4. Calculation engine (TDD) — conversion, normalization, totals, gaps, variable %, bonus payout, equity vesting, first-year vs recurring, FX sensitivity, counteroffers; spec cases 1–6
 - [ ] 5. Guidance engine (TDD) — deterministic rules, prioritized insights
-- [ ] 6. Scenario solver (TDD) — quick actions (close gap, base-first, equity-only, sign-on, match target with mix)
+- [x] 6. Scenario solver (TDD) — quick actions (close gap, base-first, equity-only, sign-on, match target with mix)
 - [ ] 7. Store + persistence (zustand, versioned schema, migration, malformed state, JSON import/export)
 - [ ] 8. UI: header, target panel (percent/amount modes, linked sliders), offer panel (bonus & equity simple/advanced, sign-on)
 - [ ] 9. UI: hero comparison, breakdown chart + table, gap insights
@@ -31,3 +31,4 @@ Branch: `claude/compensation-negotiation-cockpit-5tlo32`.
 - [ ] 17. Final gate: typecheck, lint, unit, e2e, build; commit + push
 
 ## Log
+- 22:50 Scaffold + domain schema (zod) + calc engine (money, bonus, equity, package, distribution, fx, scenarios) — 84 unit tests green, spec cases 1–6 covered.
