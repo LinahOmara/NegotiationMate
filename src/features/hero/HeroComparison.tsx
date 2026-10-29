@@ -29,7 +29,7 @@ function Figure({ eyebrow, usd, monthlyUsd, baseMonthlyUsd, extra, testId, tone 
           <dd className="font-semibold tnum" data-testid={`${testId}-monthly`}>{fmt(monthlyUsd)}</dd>
         </div>
         <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-          <dt className="text-muted">Guaranteed base / mo</dt>
+          <dt className="text-muted">Base / month</dt>
           <dd className="font-semibold tnum">{fmt(baseMonthlyUsd)}</dd>
         </div>
         {extra}

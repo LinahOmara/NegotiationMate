@@ -5,6 +5,7 @@ import { useApp } from '@/state/store'
 import { Header, ImportDialog, SaveOfferDialog, useHeaderDialogs } from '@/features/header/Header'
 import { DemoBanner } from '@/features/header/DemoBanner'
 import { HeroComparison } from '@/features/hero/HeroComparison'
+import { MobileGapBar } from '@/features/hero/MobileGapBar'
 import { TargetPanel } from '@/features/package/TargetPanel'
 import { OfferPanel } from '@/features/package/OfferPanel'
 import { BreakdownChart } from '@/features/breakdown/BreakdownChart'
@@ -34,7 +35,9 @@ export function App() {
               <Header onSave={() => dialogs.setSaveOpen(true)} onImport={() => dialogs.setImportOpen(true)} />
               <main id="main" className="mx-auto max-w-[90rem] space-y-4 px-4 pb-16 pt-4 sm:space-y-6 sm:px-6 sm:pt-6 lg:px-8">
                 <DemoBanner />
-                <HeroComparison />
+                <div id="hero">
+                  <HeroComparison />
+                </div>
                 <div className="grid min-w-0 gap-4 sm:gap-6 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.05fr)]">
                   <TargetPanel />
                   <OfferPanel />
@@ -49,10 +52,11 @@ export function App() {
                 <ScenarioExplorer />
                 <div className="grid min-w-0 gap-4 sm:gap-6 xl:grid-cols-2">
                   <FxSensitivity />
-                  <OfferHistory />
+                  <OfferHistory onSave={() => dialogs.setSaveOpen(true)} />
                 </div>
               </main>
               <Footer />
+              <MobileGapBar watchId="hero" />
             </>
           )}
         </div>

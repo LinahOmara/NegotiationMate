@@ -23,7 +23,7 @@ const ICON = { success: CheckCircle2, info: Info, error: TriangleAlert }
 export function Toaster() {
   const items = useToasts((s) => s.items)
   return (
-    <div className="no-print pointer-events-none fixed inset-x-0 bottom-4 z-[60] flex flex-col items-center gap-2 px-4" role="status" aria-live="polite">
+    <div className="no-print pointer-events-none fixed inset-x-0 bottom-20 z-[60] lg:bottom-4 flex flex-col items-center gap-2 px-4" role="status" aria-live="polite">
       <AnimatePresence initial={false}>
         {items.map((t) => {
           const Icon = ICON[t.tone]

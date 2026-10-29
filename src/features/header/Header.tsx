@@ -28,7 +28,7 @@ export function Header({ onSave, onImport }: { onSave: () => void; onImport: () 
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <Logo className="size-9 shrink-0" />
           <div className="min-w-0">
-            <h1 className="font-display-tight truncate text-lg font-semibold leading-tight sm:text-xl">Compensation Cockpit</h1>
+            <h1 className="font-display-tight text-[1.0625rem] font-semibold leading-tight xs:text-lg sm:text-xl">Compensation Cockpit</h1>
             <p className="truncate text-xs text-muted">Negotiate with clarity.</p>
           </div>
         </div>
