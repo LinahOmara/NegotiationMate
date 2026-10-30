@@ -165,7 +165,7 @@ The build uses `base: './'` in `vite.config.ts`, so asset URLs are relative and 
 BASE_PATH=/repo/ npm run build
 ```
 
-**GitHub Pages.** Build, then publish `dist/` with `actions/upload-pages-artifact` and `actions/deploy-pages` in a workflow that runs `npm ci && npm run build` and uploads `dist`. Any other static host works the same way: upload the contents of `dist/`.
+**GitHub Pages.** `.github/workflows/deploy.yml` type-checks, lints, runs the unit tests, builds, and publishes `dist/` on every push to `main`. One-time setup: **Settings → Pages → Source → GitHub Actions**. The site is served at `https://linahomara.github.io/NegotiationMate/`. Any other static host works the same way: upload the contents of `dist/`.
 
 **Netlify.**
 - Base directory: repository root
