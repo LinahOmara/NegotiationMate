@@ -5,6 +5,8 @@ import { test, expect, type Page } from '@playwright/test'
  * and Focus Mode. Also writes reference screenshots to docs/screenshots.
  */
 const WIDTHS = [320, 375, 430, 768, 1024, 1440, 1920] as const
+// Reference images for the README are refreshed only on request: UPDATE_DOCS=1 npm run test:visual
+const UPDATE_DOCS = !!process.env.UPDATE_DOCS
 const HEIGHT: Record<number, number> = { 320: 640, 375: 812, 430: 932, 768: 1024, 1024: 768, 1440: 900, 1920: 1080 }
 
 async function prepare(page: Page) {
@@ -61,7 +63,7 @@ for (const width of WIDTHS) {
       expect(await layoutProblems(page)).toEqual([])
       const body = await page.locator('body').innerText()
       expect(body).not.toMatch(/NaN|Infinity/)
-      await page.screenshot({ path: `docs/screenshots/dashboard-${width}.png`, fullPage: true })
+      if (UPDATE_DOCS) await page.screenshot({ path: `docs/screenshots/dashboard-${width}.png`, fullPage: true })
       await expect(page).toHaveScreenshot(`dashboard-${width}.png`, { fullPage: true })
     })
 
@@ -70,7 +72,7 @@ for (const width of WIDTHS) {
       await page.getByTestId('focus-enter').click()
       await expect(page.getByTestId('focus-mode')).toBeVisible()
       expect(await layoutProblems(page)).toEqual([])
-      await page.screenshot({ path: `docs/screenshots/focus-${width}.png`, fullPage: true })
+      if (UPDATE_DOCS) await page.screenshot({ path: `docs/screenshots/focus-${width}.png`, fullPage: true })
       await expect(page).toHaveScreenshot(`focus-${width}.png`, { fullPage: true })
       if (width >= 1024) {
         // Usable during a call without scrolling on a laptop.

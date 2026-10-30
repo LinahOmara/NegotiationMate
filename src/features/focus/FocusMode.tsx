@@ -356,7 +356,7 @@ export function FocusMode({ onSave }: { onSave: () => void }) {
             <Logo className="size-8 shrink-0" />
             <span className="truncate font-display-tight text-lg font-semibold">Focus Mode</span>
             <span className="hidden items-center gap-1.5 rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent-ink sm:inline-flex">
-              <span className="size-1.5 animate-pulse rounded-full bg-accent" aria-hidden /> Live call
+              <span className="size-1.5 animate-pulse rounded-full bg-accent motion-reduce:animate-none" aria-hidden /> Live call
             </span>
           </div>
           <div className="order-3 flex w-full flex-wrap items-center gap-2 lg:order-2 lg:w-auto">
