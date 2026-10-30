@@ -64,7 +64,7 @@ const uid = () =>
   typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `id-${Date.now()}-${Math.random().toString(36).slice(2)}`
 
 function initialUi(loadStatus: UiState['loadStatus']): UiState {
-  return { focusMode: false, chartMode: 'amount', targetLocks: [], offerLocks: [], solverNotes: {}, loadStatus }
+  return { focusMode: true, chartMode: 'amount', targetLocks: [], offerLocks: [], solverNotes: {}, loadStatus }
 }
 
 /** Effective adjustments for a scenario given the current data. */

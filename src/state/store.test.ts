@@ -8,8 +8,16 @@ function mem() {
 }
 
 describe('app store', () => {
-  it('starts with demo data and marks it edited after the first change', () => {
+  it('starts blank and in Focus Mode', () => {
     const s = createAppStore(mem())
+    expect(s.getState().ui.focusMode).toBe(true)
+    expect(s.getState().target.distribution.total.amount).toBe(0)
+    expect(s.getState().offer.distribution.total.amount).toBe(0)
+  })
+
+  it('marks loaded demo data as edited after the first change', () => {
+    const s = createAppStore(mem())
+    s.getState().resetDemo()
     expect(s.getState().settings.isDemo).toBe(true)
     s.getState().updateOffer((o) => ({ ...o, distribution: { ...o.distribution, total: { ...o.distribution.total, amount: 50000 } } }))
     expect(s.getState().settings.isDemo).toBe(false)

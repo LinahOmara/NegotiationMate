@@ -17,7 +17,7 @@ import { AnimatedNumber } from '@/components/AnimatedNumber'
 import { DualMoney } from '@/components/Money'
 import { InsightCard } from '@/features/guidance/InsightCard'
 import { COMPONENT_META } from '@/lib/componentMeta'
-import { COMPONENTS, type ComponentKey } from '@/domain/schema'
+import { COMPONENTS, type ComponentKey, type PackageInput } from '@/domain/schema'
 import { rebalance } from '@/calc/distribution'
 import { formatPct, formatMoney, formatRate } from '@/lib/format'
 import { SHORTCUTS } from './useShortcuts'
@@ -32,42 +32,54 @@ function Panel({ title, children, className }: { title: string; children: React.
   )
 }
 
-function OfferInputs() {
-  const offer = useApp((s) => s.offer)
-  const locks = useApp((s) => s.ui.offerLocks)
-  const { updateOffer, setOfferMode } = useApp.getState()
-  const { offer: o } = useDerived()
+type Who = 'offer' | 'target'
+
+const WHO_COPY: Record<Who, { title: string; total: string }> = {
+  offer: { title: 'Recruiter offer', total: 'Total annual offer' },
+  target: { title: 'Your target offer', total: 'Your target total' },
+}
+
+/** The same enlarged breakdown for the recruiter's offer and for your target. */
+function PackageInputs({ who }: { who: Who }) {
+  const pkg = useApp((s) => s[who])
+  const locks = useApp((s) => (who === 'offer' ? s.ui.offerLocks : s.ui.targetLocks))
+  const { updateOffer, updateTarget, setOfferMode, setTargetMode } = useApp.getState()
+  const derived = useDerived()
+  const e = derived[who]
   const { fmt } = useMoney()
-  const d = offer.distribution
-  const c = offer.components
+  const d = pkg.distribution
+  const c = pkg.components
+  const update = (fn: (p: PackageInput) => PackageInput) => (who === 'offer' ? updateOffer((p) => ({ ...p, ...fn(p) })) : updateTarget(fn))
+  const setMode = who === 'offer' ? setOfferMode : setTargetMode
+  const id = (field: string) => `focus-${who}-${field}`
 
   const setPct = (k: ComponentKey, v: number) => {
     const r = rebalance({ base: d.basePct, bonus: d.bonusPct, equity: d.equityPct }, k, v, locks)
-    updateOffer((p) => ({ ...p, distribution: { ...p.distribution, basePct: r.pcts.base, bonusPct: r.pcts.bonus, equityPct: r.pcts.equity } }))
+    update((p) => ({ ...p, distribution: { ...p.distribution, basePct: r.pcts.base, bonusPct: r.pcts.bonus, equityPct: r.pcts.equity } }))
   }
 
   return (
-    <Panel title="Recruiter offer">
+    <Panel title={WHO_COPY[who].title}>
       <Segmented
         size="md"
         className="mb-4 w-full"
-        layoutId="focus-offer-mode"
-        ariaLabel="Offer entry mode"
-        value={offer.mode}
-        onChange={setOfferMode}
+        layoutId={`focus-${who}-mode`}
+        ariaLabel={`${WHO_COPY[who].title} entry mode`}
+        value={pkg.mode}
+        onChange={setMode}
         options={[
           { value: 'distribution', label: 'Total & split' },
           { value: 'components', label: 'By component' },
         ]}
       />
-      {offer.mode === 'distribution' ? (
+      {pkg.mode === 'distribution' ? (
         <div className="space-y-4">
           <MoneyField
             size="lg"
-            label="Total annual offer"
+            label={WHO_COPY[who].total}
             value={d.total}
-            onChange={(total) => updateOffer((p) => ({ ...p, distribution: { ...p.distribution, total } }))}
-            testId="focus-offer-total"
+            onChange={(total) => update((p) => ({ ...p, distribution: { ...p.distribution, total } }))}
+            testId={id('total')}
           />
           <div className="grid grid-cols-3 gap-2">
             {COMPONENTS.map((k) => (
@@ -80,7 +92,7 @@ function OfferInputs() {
                 max={100}
                 decimals={1}
                 suffix="%"
-                testId={`focus-offer-pct-${k}`}
+                testId={id(`pct-${k}`)}
               />
             ))}
           </div>
@@ -91,26 +103,26 @@ function OfferInputs() {
             size="lg"
             label="Base salary"
             value={c.base}
-            onChange={(base) => updateOffer((p) => ({ ...p, components: { ...p.components, base } }))}
-            testId="focus-offer-base"
+            onChange={(base) => update((p) => ({ ...p, components: { ...p.components, base } }))}
+            testId={id('base')}
           />
           {c.bonus.kind === 'fixed' ? (
             <MoneyField
               size="lg"
               label="Target bonus"
               value={c.bonus.fixed}
-              onChange={(fixed) => updateOffer((p) => ({ ...p, components: { ...p.components, bonus: { ...p.components.bonus, fixed } } }))}
-              testId="focus-offer-bonus"
+              onChange={(fixed) => update((p) => ({ ...p, components: { ...p.components, bonus: { ...p.components.bonus, fixed } } }))}
+              testId={id('bonus')}
             />
           ) : (
             <NumberField
               size="lg"
               label="Target bonus (% of base)"
               value={c.bonus.percentOfBase}
-              onChange={(percentOfBase) => updateOffer((p) => ({ ...p, components: { ...p.components, bonus: { ...p.components.bonus, percentOfBase } } }))}
+              onChange={(percentOfBase) => update((p) => ({ ...p, components: { ...p.components, bonus: { ...p.components.bonus, percentOfBase } } }))}
               max={500}
               suffix="%"
-              hint={`= ${fmt(o.bonusTarget)} / yr`}
+              hint={`= ${fmt(e.bonusTarget)} / yr`}
             />
           )}
           {c.equity.mode === 'simple' ? (
@@ -118,52 +130,34 @@ function OfferInputs() {
               size="lg"
               label="Equity (annualized)"
               value={c.equity.annualValue}
-              onChange={(annualValue) => updateOffer((p) => ({ ...p, components: { ...p.components, equity: { ...p.components.equity, annualValue } } }))}
-              testId="focus-offer-equity"
+              onChange={(annualValue) => update((p) => ({ ...p, components: { ...p.components, equity: { ...p.components.equity, annualValue } } }))}
+              testId={id('equity')}
             />
           ) : (
             <p className="rounded-xl bg-surface-2 px-3 py-2.5 text-sm text-ink-soft">
-              Equity grant counted as <strong className="tnum">{fmt(o.equityAnnual)}</strong> / yr. Edit vesting details outside Focus Mode.
+              Equity grant counted as <strong className="tnum">{fmt(e.equityAnnual)}</strong> / yr. Edit vesting details outside Focus Mode.
             </p>
           )}
         </div>
       )}
-      <div className="mt-4 border-t border-line pt-4">
-        <MoneyField
-          size="lg"
-          label="Sign-on bonus (one-time)"
-          value={offer.signOn.amount}
-          periodToggle={false}
-          onChange={(amount) => updateOffer((p) => ({ ...p, signOn: { ...p.signOn, amount } }))}
-          testId="focus-offer-signon"
-        />
-      </div>
-      <TargetQuickEdit />
+      {who === 'offer' && <SignOnInput />}
     </Panel>
   )
 }
 
-function TargetQuickEdit() {
-  const target = useApp((s) => s.target)
-  const updateTarget = useApp((s) => s.updateTarget)
-  const { target: t } = useDerived()
-  const { fmt } = useMoney()
+function SignOnInput() {
+  const amount = useApp((s) => s.offer.signOn.amount)
+  const updateOffer = useApp((s) => s.updateOffer)
   return (
     <div className="mt-4 border-t border-line pt-4">
-      {target.mode === 'distribution' ? (
-        <MoneyField
-          size="lg"
-          label="Your target total"
-          value={target.distribution.total}
-          onChange={(total) => updateTarget((p) => ({ ...p, distribution: { ...p.distribution, total } }))}
-          testId="focus-target-total"
-          hint={`Split ${target.distribution.basePct}/${target.distribution.bonusPct}/${target.distribution.equityPct} — base/bonus/equity.`}
-        />
-      ) : (
-        <p className="text-sm text-ink-soft">
-          Your target: <strong className="tnum">{fmt(t.recurring)}</strong> (edit components outside Focus Mode).
-        </p>
-      )}
+      <MoneyField
+        size="lg"
+        label="Sign-on bonus (one-time)"
+        value={amount}
+        periodToggle={false}
+        onChange={(amount) => updateOffer((p) => ({ ...p, signOn: { ...p.signOn, amount } }))}
+        testId="focus-offer-signon"
+      />
     </div>
   )
 }
@@ -379,8 +373,9 @@ export function FocusMode({ onSave }: { onSave: () => void }) {
         </div>
       </header>
       <main className="mx-auto grid max-w-[110rem] gap-4 px-4 py-4 sm:px-6 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)_minmax(0,1fr)]">
-        <div className="min-w-0 lg:order-2 xl:order-1">
-          <OfferInputs />
+        <div className="flex min-w-0 flex-col gap-4 lg:order-2 xl:order-1">
+          <PackageInputs who="offer" />
+          <PackageInputs who="target" />
         </div>
         <div className="flex min-w-0 flex-col gap-4 lg:order-1 xl:order-2">
           <LiveNumbers />

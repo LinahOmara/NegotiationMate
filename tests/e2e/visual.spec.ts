@@ -15,6 +15,11 @@ async function prepare(page: Page) {
   await page.evaluate(() => localStorage.clear())
   await page.reload()
   await page.evaluate(() => document.fonts.ready)
+  // The first visit is blank and in Focus Mode; load the demo example on the dashboard.
+  await page.getByTestId('focus-exit').click()
+  await page.getByTestId('more-actions').click()
+  await page.getByTestId('reset').click()
+  await expect(page.getByText('Reset to the demonstration example')).toBeHidden({ timeout: 10_000 })
   await expect(page.getByTestId('hero-gap-amount')).toHaveAttribute('data-value', '−$21,900')
 }
 

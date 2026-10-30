@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { MINUS, STORAGE_KEY, expectNoBadNumbers, expectValue, menuAction, openFresh, setDisplay, setRate } from './helpers'
+import { MINUS, STORAGE_KEY, expectNoBadNumbers, expectValue, leaveFocus, menuAction, openFresh, setDisplay, setRate } from './helpers'
 
 test.beforeEach(async ({ page }) => {
   await openFresh(page)
@@ -188,6 +188,7 @@ test('11. offer history persists across reload and compares', async ({ page }) =
     .toBe(2)
 
   await page.reload()
+  await leaveFocus(page)
   await expect(page.getByTestId('history-entry')).toHaveCount(2)
   await expect(page.getByTestId('history-panel')).toContainText('Initial Offer')
   await expect(page.getByTestId('history-panel')).toContainText('Revised Offer 1')
@@ -205,6 +206,7 @@ test('11b. history survives an immediate reload (no debounce data loss)', async 
   await page.getByTestId('save-confirm').click()
   await expect(page.getByTestId('history-entry')).toHaveCount(1)
   await page.reload()
+  await leaveFocus(page)
   await expect(page.getByTestId('history-entry')).toHaveCount(1)
 })
 

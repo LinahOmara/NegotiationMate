@@ -2,7 +2,7 @@
 
 **Negotiate with clarity.**
 
-Compensation Cockpit is a real-time, browser-only workspace for candidates negotiating job offers. The primary scenario is a candidate in Egypt negotiating with an international company, where the offer may be in USD, the cost of living and taxes are in EGP, and the exchange rate moves. You enter your target package and the offer you received, then see the gap, the breakdown, what each currency arrangement is worth, and which counteroffers would close the gap. Every number updates as you type. Its signature feature is **Focus Mode**, a reduced, enlarged layout meant to be used live on a recruiter call, with the key figures large and readable and the controls within reach. There is no backend and no accounts. Your data is stored only in the browser's `localStorage`.
+Compensation Cockpit is a real-time, browser-only workspace for candidates negotiating job offers. The primary scenario is a candidate in Egypt negotiating with an international company, where the offer may be in USD, the cost of living and taxes are in EGP, and the exchange rate moves. You enter your target package and the offer you received, then see the gap, the breakdown, what each currency arrangement is worth, and which counteroffers would close the gap. Every number updates as you type. The app opens in **Focus Mode** with empty fields (no pre-filled numbers; load the demo example from the menu if you want to explore). Focus Mode is the signature feature: a reduced, enlarged layout meant to be used live on a recruiter call, with the key figures large and readable and the controls within reach. There is no backend and no accounts. Your data is stored only in the browser's `localStorage`.
 
 ## Screenshots
 
@@ -47,7 +47,7 @@ Compensation Cockpit is a real-time, browser-only workspace for candidates negot
 
 ## Focus Mode
 
-Press **F** (or the Focus Mode button) during a recruiter call. The screen reduces to the recruiter's offer inputs (enlarged), your target, the live gap and how much of the target the offer reaches, guaranteed versus variable pay, the FX conversion, the top two negotiation questions with copy buttons, and the current counteroffer. Advanced equity modelling is hidden. At 1440×900 everything fits without scrolling.
+Press **F** (or the Focus Mode button) during a recruiter call. Focus Mode is the default view on first load. The screen reduces to the recruiter's offer inputs (enlarged), a **Your target offer** box below it with the same breakdown (total and split, or by component), the live gap and how much of the target the offer reaches, guaranteed versus variable pay, the FX conversion, the top two negotiation questions with copy buttons, and the current counteroffer. Advanced equity modelling is hidden. At 1440×900 everything fits without scrolling.
 
 | Key | Action |
 | --- | --- |

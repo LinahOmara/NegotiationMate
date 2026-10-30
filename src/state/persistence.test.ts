@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { STORAGE_KEY, exportJson, importJson, loadFromStorage, saveToStorage } from './persistence'
-import { demoData } from '@/domain/factories'
+import { blankData, demoData } from '@/domain/factories'
 
 function memoryStorage(initial: Record<string, string> = {}) {
   const store = new Map(Object.entries(initial))
@@ -21,15 +21,18 @@ describe('persistence', () => {
     expect(r.status).toBe('loaded')
     expect(r.data.settings.rate).toBe(61.5)
   })
-  it('returns demo data when nothing is stored', () => {
+  it('returns blank data (no demo numbers) when nothing is stored', () => {
     const r = loadFromStorage(memoryStorage())
     expect(r.status).toBe('empty')
-    expect(r.data.settings.isDemo).toBe(true)
+    expect(r.data).toEqual(blankData())
+    expect(r.data.settings.isDemo).toBe(false)
+    expect(r.data.target.distribution.total.amount).toBe(0)
+    expect(r.data.offer.distribution.total.amount).toBe(0)
   })
   it('recovers gracefully from malformed JSON', () => {
     const r = loadFromStorage(memoryStorage({ [STORAGE_KEY]: '{not json' }))
     expect(r.status).toBe('recovered')
-    expect(r.data).toEqual(demoData())
+    expect(r.data).toEqual(blankData())
   })
   it('recovers from schema-invalid data (negative amounts)', () => {
     const bad = JSON.parse(exportJson(demoData()))

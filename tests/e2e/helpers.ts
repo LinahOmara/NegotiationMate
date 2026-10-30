@@ -3,8 +3,8 @@ import { expect, type Locator, type Page } from '@playwright/test'
 export const STORAGE_KEY = 'compensation-cockpit/state'
 export const MINUS = '−'
 
-/** Start from a clean browser state once per test (survives in-test reloads). */
-export async function openFresh(page: Page) {
+/** Fresh first visit: empty browser storage, no demo numbers; the app opens in Focus Mode. */
+export async function openBlank(page: Page) {
   await page.addInitScript(() => {
     try {
       if (!sessionStorage.getItem('__e2e_seeded')) {
@@ -16,7 +16,20 @@ export async function openFresh(page: Page) {
     }
   })
   await page.goto('/')
+  await expect(page.getByTestId('focus-mode')).toBeVisible()
+}
+
+/** Clean browser state once per test (survives in-test reloads), then the dashboard with the demo example loaded. */
+export async function openFresh(page: Page) {
+  await openBlank(page)
+  await leaveFocus(page)
+  await menuAction(page, 'reset')
   await expect(page.getByTestId('hero-target-total')).toBeVisible()
+}
+
+export async function leaveFocus(page: Page) {
+  await page.getByTestId('focus-exit').click()
+  await expect(page.getByTestId('focus-mode')).toBeHidden()
 }
 
 /** Assert on the FINAL value of an animated number. */
