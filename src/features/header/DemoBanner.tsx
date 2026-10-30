@@ -21,7 +21,7 @@ export function DemoBanner() {
             <FlaskConical className="size-4 shrink-0 text-[#9a6a22]" aria-hidden />
             <p className="min-w-0 flex-1 text-ink-soft">
               {loadStatus === 'recovered' && !isDemo ? (
-                <>Your saved data could not be read, so the demonstration example was loaded instead.</>
+                <>Your saved data could not be read, so you are starting with an empty workspace.</>
               ) : (
                 <>
                   <strong className="font-semibold text-ink">Demonstration numbers.</strong> Every value is editable and none of it is real employer compensation data.

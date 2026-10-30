@@ -1,5 +1,5 @@
 import { SCHEMA_VERSION, persistedSchema, type AppData, type PersistedEnvelope } from '@/domain/schema'
-import { demoData, zeroAdjustments } from '@/domain/factories'
+import { blankData, zeroAdjustments } from '@/domain/factories'
 
 /**
  * Local-only persistence. Nothing here performs network requests:
@@ -90,11 +90,11 @@ export function loadFromStorage(storage: StorageLike | undefined): LoadResult {
   try {
     raw = storage?.getItem(STORAGE_KEY) ?? null
   } catch {
-    return { data: demoData(), status: 'empty' }
+    return { data: blankData(), status: 'empty' }
   }
-  if (raw === null) return { data: demoData(), status: 'empty' }
+  if (raw === null) return { data: blankData(), status: 'empty' }
   const r = importJson(raw)
-  return r.ok ? { data: r.data, status: 'loaded' } : { data: demoData(), status: 'recovered' }
+  return r.ok ? { data: r.data, status: 'loaded' } : { data: blankData(), status: 'recovered' }
 }
 
 export function saveToStorage(storage: StorageLike | undefined, data: AppData): boolean {
